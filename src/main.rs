@@ -11,14 +11,15 @@ mod util;
 #[derive(StructOpt)]
 #[structopt(about = "Toggl cli for geek")]
 enum Program {
-    Start {
+    StartTimer {
         #[structopt(long)]
-        pid: u32,
+        pid: Option<u32>,
         #[structopt(long)]
         description: String,
     },
-    Stop {},
-    View {},
+    StopTimer {},
+    ViewTimer {},
+    ListProjects {},
     Init {
         #[structopt(long)]
         token: String,
@@ -40,16 +41,20 @@ async fn main() -> Result<(), util::AnyError> {
     };
 
     match Program::from_args() {
-        Program::Start { pid, description } => {
+        Program::StartTimer { pid, description } => {
+            let real_pid = match pid {
+                Some(pid) => pid,
+                _ => 123 as u32,
+            };
             let time_entry = TimeEntryCreateParam {
-                pid: pid,
+                pid: real_pid,
                 description: description,
                 created_with: "toggl-cli-rs".to_string(),
             };
             let resp = client.create_time_entry(time_entry).await?;
             println!("{:#?}", resp);
         }
-        Program::Stop {} => {
+        Program::StopTimer {} => {
             let current = client.clone().get_current_time_entry().await?;
             match current {
                 Some(entry) => {
@@ -60,12 +65,16 @@ async fn main() -> Result<(), util::AnyError> {
                 _ => println!("Currently no entry exists"),
             }
         }
-        Program::View {} => {
+        Program::ViewTimer {} => {
             let current = client.get_current_time_entry().await?;
             match current {
                 Some(entry) => println!("{:#?}", entry),
                 _ => println!("Currently no entry exists"),
             }
+        }
+        Program::ListProjects {} => {
+            let projects = client.get_all_projects_of_user().await?;
+            println!("{:#?}", projects);
         }
         Program::Init { token } => {
             fs::write(&path, token)?;

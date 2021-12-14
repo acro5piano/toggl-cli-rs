@@ -1,4 +1,6 @@
-use crate::toggl_types::{Data, TimeEntry, TimeEntryCreateParam, TimeEntryCreateParamWrapped};
+use crate::toggl_types::{
+    Data, Project, TimeEntry, TimeEntryCreateParam, TimeEntryCreateParamWrapped, Workspace,
+};
 use crate::util::AnyError;
 use serde::de;
 use serde::Serialize;
@@ -15,8 +17,8 @@ pub struct TogglClient<'a> {
 }
 
 impl TogglClient<'_> {
-    async fn get<T: de::DeserializeOwned>(self, path: &str) -> Result<T, AnyError> {
-        let resp: Data<T> = reqwest::Client::new()
+    async fn get<T: de::DeserializeOwned>(&self, path: &str) -> Result<T, AnyError> {
+        let resp: T = reqwest::Client::new()
             .get(format!("{}{}", self.endpoint, path))
             .header("Content-Type", "application/json")
             .basic_auth(self.api_token, Some("api_token"))
@@ -24,7 +26,7 @@ impl TogglClient<'_> {
             .await?
             .json()
             .await?;
-        Ok(resp.data)
+        Ok(resp)
     }
 
     async fn post<T: de::DeserializeOwned, D: Serialize>(
@@ -60,12 +62,33 @@ impl TogglClient<'_> {
         Ok(resp.data)
     }
 
-    pub async fn get_current_time_entry(self) -> Result<Option<TimeEntry>, AnyError> {
+    pub async fn get_current_time_entry(&self) -> Result<Option<TimeEntry>, AnyError> {
         Ok(self.get("/time_entries/current").await?)
     }
 
+    pub async fn get_all_projects_of_user(&self) -> Result<Vec<Project>, AnyError> {
+        let workspaces = self.get_workspaces().await?;
+        println!("{:?}", workspaces);
+        let mut projects: Vec<Project> = vec![];
+        for w in workspaces {
+            for p in self.get_projects(w.id).await? {
+                projects.push(p);
+            }
+        }
+        Ok(projects)
+    }
+
+    pub async fn get_projects(&self, workspace_id: u32) -> Result<Vec<Project>, AnyError> {
+        let path = format!("/workspaces/{}/projects", workspace_id);
+        Ok(self.get(&path).await?)
+    }
+
+    pub async fn get_workspaces(&self) -> Result<Vec<Workspace>, AnyError> {
+        Ok(self.get("/workspaces").await?)
+    }
+
     pub async fn create_time_entry(
-        self,
+        &self,
         param: TimeEntryCreateParam,
     ) -> Result<Option<TimeEntry>, Box<dyn std::error::Error>> {
         let wrapped = TimeEntryCreateParamWrapped { time_entry: param };
@@ -73,10 +96,10 @@ impl TogglClient<'_> {
     }
 
     pub async fn stop_time_entry(
-        self,
+        &self,
         time_entry_id: u32,
     ) -> Result<Option<TimeEntry>, Box<dyn std::error::Error>> {
-        let path = format!("/time_entries/{:?}/stop", time_entry_id);
+        let path = format!("/time_entries/{}/stop", time_entry_id);
         Ok(self.put(&path).await?)
     }
 }
