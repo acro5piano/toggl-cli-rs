@@ -63,7 +63,10 @@ impl TogglClient<'_> {
     }
 
     pub async fn get_current_time_entry(&self) -> Result<Option<TimeEntry>, AnyError> {
-        Ok(self.get("/time_entries/current").await?)
+        Ok(self
+            .get::<Data<Option<TimeEntry>>>("/time_entries/current")
+            .await?
+            .data)
     }
 
     pub async fn get_all_projects_of_user(&self) -> Result<Vec<Project>, AnyError> {

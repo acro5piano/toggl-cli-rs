@@ -68,13 +68,15 @@ async fn main() -> Result<(), util::AnyError> {
         Program::ViewTimer {} => {
             let current = client.get_current_time_entry().await?;
             match current {
-                Some(entry) => println!("{:#?}", entry),
+                Some(entry) => println!("{:?}", entry),
                 _ => println!("Currently no entry exists"),
             }
         }
         Program::ListProjects {} => {
             let projects = client.get_all_projects_of_user().await?;
-            println!("{:#?}", projects);
+            for project in projects {
+                println!("{} | {}", project.id, project.name);
+            }
         }
         Program::Init { token } => {
             fs::write(&path, token)?;
