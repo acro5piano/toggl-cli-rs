@@ -26,7 +26,9 @@ enum Program {
 }
 
 #[tokio::main]
-async fn main() -> Result<(), Box<dyn std::error::Error>> {
+async fn main() -> Result<(), util::AnyError> {
+    env_logger::init();
+
     let path = Path::new(&env::var("HOME")?).join(".toggl-token");
     let api_token = match fs::read_to_string(&path) {
         Ok(content) => content,
@@ -52,6 +54,8 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
             match current {
                 Some(entry) => {
                     client.stop_time_entry(entry.id).await?;
+                    println!("Stopped task: {:?}", entry);
+                    println!("Success!");
                 }
                 _ => println!("Currently no entry exists"),
             }

@@ -18,6 +18,7 @@ impl TogglClient<'_> {
     async fn get<T: de::DeserializeOwned>(self, path: &str) -> Result<T, AnyError> {
         let resp: Data<T> = reqwest::Client::new()
             .get(format!("{}{}", self.endpoint, path))
+            .header("Content-Type", "application/json")
             .basic_auth(self.api_token, Some("api_token"))
             .send()
             .await?
@@ -27,12 +28,13 @@ impl TogglClient<'_> {
     }
 
     async fn post<T: de::DeserializeOwned, D: Serialize>(
-        self,
+        &self,
         path: &str,
         data: D,
     ) -> Result<T, AnyError> {
         let resp: Data<T> = reqwest::Client::new()
             .post(format!("{}{}", self.endpoint, path))
+            .header("Content-Type", "application/json")
             .basic_auth(self.api_token, Some("api_token"))
             .json(&data)
             .send()
@@ -44,9 +46,11 @@ impl TogglClient<'_> {
 
     // TODO: enable to add data
     // async fn put<T: de::DeserializeOwned, D: Serialize>(
-    async fn put<T: de::DeserializeOwned>(self, path: &str) -> Result<T, AnyError> {
+    async fn put<T: de::DeserializeOwned>(&self, path: &str) -> Result<T, AnyError> {
         let resp: Data<T> = reqwest::Client::new()
-            .post(format!("{}{}", self.endpoint, path))
+            .put(format!("{}{}", self.endpoint, path))
+            .header("Content-Type", "application/json")
+            .header("Content-Length", "0")
             .basic_auth(self.api_token, Some("api_token"))
             // .json(&data)
             .send()
