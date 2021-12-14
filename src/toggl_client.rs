@@ -5,9 +5,6 @@ use crate::util::AnyError;
 use serde::de;
 use serde::Serialize;
 
-#[cfg(test)]
-use std::env;
-
 pub const TOGGL_ENDPOINT: &str = "https://api.track.toggl.com/api/v8";
 
 #[derive(Clone)]
@@ -71,7 +68,6 @@ impl TogglClient<'_> {
 
     pub async fn get_all_projects_of_user(&self) -> Result<Vec<Project>, AnyError> {
         let workspaces = self.get_workspaces().await?;
-        println!("{:?}", workspaces);
         let mut projects: Vec<Project> = vec![];
         for w in workspaces {
             for p in self.get_projects(w.id).await? {
@@ -110,6 +106,7 @@ impl TogglClient<'_> {
 #[cfg(test)]
 mod test {
     use super::*;
+    use std::env;
 
     #[tokio::test]
     async fn test_api_entry() -> Result<(), Box<dyn std::error::Error>> {
