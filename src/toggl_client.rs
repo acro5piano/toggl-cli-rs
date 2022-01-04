@@ -68,6 +68,11 @@ impl TogglClient<'_> {
             .data)
     }
 
+    pub async fn get_time_entries(&self) -> Result<Vec<TimeEntry>, AnyError> {
+        let time_entires: Vec<TimeEntry> = self.get("/time_entries").await?;
+        Ok(time_entires)
+    }
+
     pub async fn get_all_projects_of_user(&self) -> Result<Vec<Project>, AnyError> {
         let workspaces = self.get_workspaces().await?;
         let mut projects: Vec<Project> = vec![];

@@ -21,6 +21,7 @@ enum Program {
     },
     StopTimer {},
     ViewTimer {},
+    ListTimers {},
     ListProjects {},
     Init {
         #[structopt(long)]
@@ -89,6 +90,22 @@ async fn main() -> Result<(), util::AnyError> {
             match current {
                 Some(entry) => println!("{:?}", entry),
                 _ => println!("Currently no entry exists"),
+            }
+        }
+        Program::ListTimers {} => {
+            let time_entries = client.get_time_entries().await?;
+            println!("Start                     | Stop                      | Description");
+            for time_entry in time_entries
+                .iter()
+                .rev()
+                .collect::<Vec<&toggl_types::TimeEntry>>()
+            {
+                println!(
+                    "{} | {} | {}",
+                    time_entry.start,
+                    time_entry.display_stop(),
+                    time_entry.description
+                );
             }
         }
         Program::ListProjects {} => {
