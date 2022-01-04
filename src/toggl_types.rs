@@ -9,7 +9,7 @@ pub struct Data<T> {
 pub struct TimeEntry {
     pub id: u32,
     pub wid: u32,
-    pub pid: u32,
+    pub pid: Option<u32>,
     pub billable: bool,
     pub start: String,
     pub duration: i64,
@@ -26,7 +26,7 @@ pub struct TimeEntryCreateParamWrapped {
 
 #[derive(Debug, Serialize, Deserialize)]
 pub struct TimeEntryCreateParam {
-    pub pid: u32,
+    pub pid: Option<u32>,
     pub description: String,
     pub created_with: String,
 }

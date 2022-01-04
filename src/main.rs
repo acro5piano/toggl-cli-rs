@@ -15,6 +15,8 @@ enum Program {
         #[structopt(long)]
         pid: Option<u32>,
         #[structopt(long)]
+        project_name: Option<String>,
+        #[structopt(long)]
         description: String,
     },
     StopTimer {},
@@ -41,11 +43,28 @@ async fn main() -> Result<(), util::AnyError> {
     };
 
     match Program::from_args() {
-        Program::StartTimer { pid, description } => {
-            let real_pid = match pid {
-                Some(pid) => pid,
-                _ => 123 as u32,
-            };
+        Program::StartTimer {
+            pid,
+            project_name,
+            description,
+        } => {
+            let mut real_pid: Option<u32> = pid;
+            if pid.is_none() {
+                if let Some(n) = project_name {
+                    let projects = client.get_all_projects_of_user().await.unwrap();
+                    for project in projects {
+                        if project.name == n {
+                            real_pid = Some(project.id);
+                        }
+                    }
+                    if real_pid.is_none() {
+                        panic!(
+                            "Project {} not found! You can list projects by `toggl list-projects`",
+                            n
+                        );
+                    }
+                }
+            }
             let time_entry = TimeEntryCreateParam {
                 pid: real_pid,
                 description: description,

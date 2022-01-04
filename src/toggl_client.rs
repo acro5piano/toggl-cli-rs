@@ -1,3 +1,5 @@
+// See https://github.com/toggl/toggl_api_docs/blob/master/toggl_api.md
+
 use crate::toggl_types::{
     Data, Project, TimeEntry, TimeEntryCreateParam, TimeEntryCreateParamWrapped, Workspace,
 };
@@ -26,7 +28,7 @@ impl TogglClient<'_> {
         Ok(resp)
     }
 
-    async fn post<T: de::DeserializeOwned, D: Serialize>(
+    async fn post<T: de::DeserializeOwned + std::fmt::Debug, D: Serialize>(
         &self,
         path: &str,
         data: D,
