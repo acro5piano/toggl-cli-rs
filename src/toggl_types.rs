@@ -9,14 +9,24 @@ pub struct Data<T> {
 pub struct TimeEntry {
     pub id: u32,
     pub wid: u32,
-    pub pid: u32,
+    pub pid: Option<u32>,
     pub billable: bool,
     pub start: String,
+    pub stop: Option<String>,
     pub duration: i64,
     pub description: String,
     pub duronly: bool,
     pub at: String,
     pub uid: u32,
+}
+
+impl TimeEntry {
+    pub fn display_stop(&self) -> &str {
+        match &self.stop {
+            Some(stop) => stop,
+            _ => "                         ",
+        }
+    }
 }
 
 #[derive(Debug, Serialize, Deserialize)]
@@ -26,7 +36,7 @@ pub struct TimeEntryCreateParamWrapped {
 
 #[derive(Debug, Serialize, Deserialize)]
 pub struct TimeEntryCreateParam {
-    pub pid: u32,
+    pub pid: Option<u32>,
     pub description: String,
     pub created_with: String,
 }

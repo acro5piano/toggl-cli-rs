@@ -1,3 +1,5 @@
+// See https://github.com/toggl/toggl_api_docs/blob/master/toggl_api.md
+
 use crate::toggl_types::{
     Data, Project, TimeEntry, TimeEntryCreateParam, TimeEntryCreateParamWrapped, Workspace,
 };
@@ -26,7 +28,7 @@ impl TogglClient<'_> {
         Ok(resp)
     }
 
-    async fn post<T: de::DeserializeOwned, D: Serialize>(
+    async fn post<T: de::DeserializeOwned + std::fmt::Debug, D: Serialize>(
         &self,
         path: &str,
         data: D,
@@ -64,6 +66,11 @@ impl TogglClient<'_> {
             .get::<Data<Option<TimeEntry>>>("/time_entries/current")
             .await?
             .data)
+    }
+
+    pub async fn get_time_entries(&self) -> Result<Vec<TimeEntry>, AnyError> {
+        let time_entires: Vec<TimeEntry> = self.get("/time_entries").await?;
+        Ok(time_entires)
     }
 
     pub async fn get_all_projects_of_user(&self) -> Result<Vec<Project>, AnyError> {
