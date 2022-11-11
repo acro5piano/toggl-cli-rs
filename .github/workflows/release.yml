@@ -1,21 +1,34 @@
+name: release
+
 on:
   push:
     tags: ["v*"]
+
 jobs:
-  release:
+  deploy:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
+      - uses: actions/cache@v3
+        with:
+          key: v1-${{ runner.os }}-${{ hashFiles('**/Cargo.lock') }}
+          path: |
+            target
+            ~/.cargo
       - uses: actions-rs/toolchain@v1
         with:
-            toolchain: nightly
-            override: true
-            components: rustfmt, clippy
-            # target: x86_64-unknown-linux-musl
-      - uses: Swatinem/rust-cache@v1
+            toolchain: stable
+            target: x86_64-unknown-linux-musl
+
+      - name: Install native dependencies to compile the app for musl
+        run: |
+            sudo apt-get -y update
+            sudo apt-get -y install libdbus-1-dev pkg-config libssl-dev musl musl-dev musl-tools
+
+      - name: Build the app
       - run: cargo build --release
+
       - name: Release
         uses: softprops/action-gh-release@v1
-        if: startsWith(github.ref, 'refs/tags/')
         with:
           files: target/release/toggl-cli-rs
