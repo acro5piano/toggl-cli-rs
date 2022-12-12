@@ -26,7 +26,7 @@ jobs:
             sudo apt-get -y install libdbus-1-dev pkg-config libssl-dev musl musl-dev musl-tools
 
       - name: Build the app
-      - run: cargo build --release
+        run: cargo build --release
 
       - name: Release
         uses: softprops/action-gh-release@v1
