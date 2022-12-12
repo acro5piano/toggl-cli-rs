@@ -6,13 +6,16 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
+      - uses: actions/cache@v3
+        with:
+          key: v1-${{ runner.os }}-${{ hashFiles('**/Cargo.lock') }}
+          path: |
+            target
+            ~/.cargo
       - uses: actions-rs/toolchain@v1
         with:
-            toolchain: nightly
-            override: true
-            components: rustfmt, clippy
-            # target: x86_64-unknown-linux-musl
-      - uses: Swatinem/rust-cache@v1
+            toolchain: stable
+            target: x86_64-unknown-linux-gnu
       - run: cargo build --release
       - name: Release
         uses: softprops/action-gh-release@v1
