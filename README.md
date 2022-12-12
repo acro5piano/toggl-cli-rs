@@ -5,7 +5,7 @@ CLI tool to control toggl via the api, written in Rust.
 # Install
 
 ```bash
-sudo curl -L https://github.com/acro5piano/toggl-cli-rs/releases/download/v0.0.1/toggl-cli-rs -o /usr/local/bin/toggl
+sudo curl -L https://github.com/acro5piano/toggl-cli-rs/releases/download/v0.0.2/toggl-cli-rs -o /usr/local/bin/toggl
 sudo chmod +x /usr/local/bin/toggl
 ```
 
