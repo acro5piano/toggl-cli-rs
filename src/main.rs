@@ -68,7 +68,7 @@ async fn main() -> Result<(), util::AnyError> {
             }
             let time_entry = TimeEntryCreateParam {
                 pid: real_pid,
-                description: description,
+                description,
                 created_with: "toggl-cli-rs".to_string(),
             };
             let resp = client.create_time_entry(time_entry).await?;
