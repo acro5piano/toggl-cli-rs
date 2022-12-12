@@ -18,12 +18,7 @@ jobs:
       - uses: actions-rs/toolchain@v1
         with:
             toolchain: stable
-            target: x86_64-unknown-linux-musl
-
-      - name: Install native dependencies to compile the app for musl
-        run: |
-            sudo apt-get -y update
-            sudo apt-get -y install libdbus-1-dev pkg-config libssl-dev musl musl-dev musl-tools
+            target: x86_64-unknown-linux-gnu
 
       - name: Build the app
         run: cargo build --release
@@ -31,4 +26,4 @@ jobs:
       - name: Release
         uses: softprops/action-gh-release@v1
         with:
-          files: target/release/toggl-cli-rs
+          files: target/x86_64-unknown-linux-gnu/release/toggl-cli-rs
