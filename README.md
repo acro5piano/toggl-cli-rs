@@ -5,7 +5,7 @@ CLI tool to control toggl via the api, written in Rust.
 # Install
 
 ```bash
-sudo curl -L https://github.com/acro5piano/toggl-cli-rs/releases/download/v0.0.2/toggl-cli-rs -o /usr/local/bin/toggl
+sudo curl -L https://github.com/acro5piano/toggl-cli-rs/releases/latest/download/toggl-cli-rs -o /usr/local/bin/toggl
 sudo chmod +x /usr/local/bin/toggl
 ```
 
@@ -18,12 +18,23 @@ toggl init --token <toggle_api_token>
 # Usage
 
 ```bash
-# List Projects
-toggl list-projects
+$ toggl
+toggl-cli-rs 0.0.3
+Toggl cli for geek
 
-# Start Timer
-toggl start-timer --pid <project_id> --description <description>
+USAGE:
+    toggl <SUBCOMMAND>
 
-# Stop Timer
-toggl stop-timer
+FLAGS:
+    -h, --help       Prints help information
+    -V, --version    Prints version information
+
+SUBCOMMANDS:
+    help             Prints this message or the help of the given subcommand(s)
+    init
+    list-projects
+    list-timers
+    start-timer
+    stop-timer
+    view-timer
 ```
