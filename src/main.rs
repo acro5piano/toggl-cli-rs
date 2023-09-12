@@ -12,11 +12,11 @@ mod util;
 #[structopt(about = "Toggl cli for geek")]
 enum Program {
     StartTimer {
-        #[structopt(long)]
+        #[structopt(short, long)]
         pid: Option<u32>,
-        #[structopt(long)]
+        #[structopt(short = "n", long)]
         project_name: Option<String>,
-        #[structopt(long)]
+        #[structopt(short, long)]
         description: String,
     },
     StopTimer {},
@@ -24,7 +24,7 @@ enum Program {
     ListTimers {},
     ListProjects {},
     Init {
-        #[structopt(long)]
+        #[structopt(short, long)]
         token: String,
     },
 }
