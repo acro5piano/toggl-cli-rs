@@ -38,3 +38,24 @@ SUBCOMMANDS:
     stop-timer
     view-timer
 ```
+
+### List Projects
+
+```
+toggl list-projects
+
+# 012345678 | hobby
+# 012345679 | my-project
+```
+
+### Start Timer
+
+```
+toggl start-timer --project-name my-project --description 'Daily Standup'
+```
+
+Or in short,
+
+```
+toggl start-timer -n my-project -d 'Daily Standup'
+```
