@@ -42,21 +42,18 @@ pub struct TimeEntryCreateParam {
 }
 
 #[derive(Debug, Serialize, Deserialize)]
+pub struct TimeEntryStopParam {
+    pub stop: String,
+}
+
+#[derive(Debug, Serialize, Deserialize)]
 pub struct Project {
     pub id: u32,
     pub wid: u32,
     pub cid: Option<u32>,
     pub name: String,
-    pub billable: bool,
-    pub is_private: bool,
-    pub active: bool,
-    pub template: bool,
     pub at: String,
     pub created_at: String,
-    pub color: String,
-    pub auto_estimates: bool,
-    pub actual_hours: Option<i64>,
-    pub hex_color: String,
 }
 
 #[derive(Debug, Serialize, Deserialize)]

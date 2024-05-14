@@ -72,6 +72,7 @@ async fn main() -> Result<(), util::AnyError> {
                 created_with: "toggl-cli-rs".to_string(),
             };
             let resp = client.create_time_entry(time_entry).await?;
+            dbg!(&resp);
             println!("{:#?}", resp);
         }
         Program::StopTimer {} => {
@@ -86,7 +87,7 @@ async fn main() -> Result<(), util::AnyError> {
             }
         }
         Program::ViewTimer {} => {
-            let current = client.get_current_time_entry().await?;
+            let current = client.clone().get_current_time_entry().await?;
             match current {
                 Some(entry) => println!("{:?}", entry),
                 _ => println!("Currently no entry exists"),
