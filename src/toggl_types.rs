@@ -60,7 +60,7 @@ pub struct Project {
 pub struct Workspace {
     pub id: u32,
     pub name: String,
-    pub profile: u32,
+    pub profile: Option<u32>,
     pub premium: bool,
     pub admin: bool,
     pub default_hourly_rate: Option<i64>,
