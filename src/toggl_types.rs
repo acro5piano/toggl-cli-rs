@@ -66,7 +66,7 @@ pub struct Workspace {
     pub default_hourly_rate: Option<i64>,
     pub default_currency: Option<String>,
     pub only_admins_may_create_projects: bool,
-    pub only_admins_see_billable_rates: bool,
+    pub only_admins_see_billable_rates: Option<bool>,
     pub only_admins_see_team_dashboard: bool,
     pub projects_billable_by_default: bool,
     pub rounding: i64,
