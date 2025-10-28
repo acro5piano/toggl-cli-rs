@@ -16,14 +16,20 @@ pub struct TogglClient<'a> {
 
 impl TogglClient<'_> {
     async fn get<T: de::DeserializeOwned>(&self, path: &str) -> Result<T, AnyError> {
-        let resp: T = reqwest::Client::new()
+        let response = reqwest::Client::new()
             .get(format!("{}{}", self.endpoint, path))
             .header("Content-Type", "application/json")
             .basic_auth(self.api_token, Some("api_token"))
             .send()
-            .await?
-            .json()
             .await?;
+
+        let status = response.status();
+        if !status.is_success() {
+            let error_text = response.text().await?;
+            return Err(format!("API error ({}): {}", status, error_text).into());
+        }
+
+        let resp: T = response.json().await?;
         Ok(resp)
     }
 
@@ -32,15 +38,21 @@ impl TogglClient<'_> {
         path: &str,
         data: D,
     ) -> Result<T, AnyError> {
-        let resp: Data<T> = reqwest::Client::new()
+        let response = reqwest::Client::new()
             .post(format!("{}{}", self.endpoint, path))
             .header("Content-Type", "application/json")
             .basic_auth(self.api_token, Some("api_token"))
             .json(&data)
             .send()
-            .await?
-            .json()
             .await?;
+
+        let status = response.status();
+        if !status.is_success() {
+            let error_text = response.text().await?;
+            return Err(format!("API error ({}): {}", status, error_text).into());
+        }
+
+        let resp: Data<T> = response.json().await?;
         Ok(resp.data)
     }
 
@@ -49,16 +61,22 @@ impl TogglClient<'_> {
         path: &str,
         data: D,
     ) -> Result<T, AnyError> {
-        let resp: Data<T> = reqwest::Client::new()
+        let response = reqwest::Client::new()
             .put(format!("{}{}", self.endpoint, path))
             .header("Content-Type", "application/json")
             // .header("Content-Length", "0")
             .basic_auth(self.api_token, Some("api_token"))
             .json(&data)
             .send()
-            .await?
-            .json()
             .await?;
+
+        let status = response.status();
+        if !status.is_success() {
+            let error_text = response.text().await?;
+            return Err(format!("API error ({}): {}", status, error_text).into());
+        }
+
+        let resp: Data<T> = response.json().await?;
         Ok(resp.data)
     }
 
