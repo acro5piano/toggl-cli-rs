@@ -75,3 +75,13 @@ pub struct Workspace {
     pub at: String,
     pub ical_enabled: bool,
 }
+
+#[derive(Debug, Serialize, Deserialize)]
+pub struct SummaryReportExportParam {
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub start_date: Option<String>,
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub end_date: Option<String>,
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub project_ids: Option<Vec<u32>>,
+}

@@ -1,4 +1,4 @@
-use crate::toggl_types::TimeEntryCreateParam;
+use crate::toggl_types::{SummaryReportExportParam, TimeEntryCreateParam};
 use std::env;
 use std::fs;
 use std::path::Path;
@@ -23,6 +23,16 @@ enum Program {
     ViewTimer {},
     ListTimers {},
     ListProjects {},
+    ExportPdf {
+        #[structopt(short = "n", long, help = "Filter by project name")]
+        project_name: Option<String>,
+        #[structopt(short = "o", long, default_value = "toggl_report.pdf", help = "Output file path")]
+        output: String,
+        #[structopt(short = "s", long, help = "Start date (YYYY-MM-DD)")]
+        start_date: Option<String>,
+        #[structopt(short = "e", long, help = "End date (YYYY-MM-DD)")]
+        end_date: Option<String>,
+    },
     Init {
         #[structopt(short, long)]
         token: String,
@@ -113,6 +123,41 @@ async fn main() -> Result<(), util::AnyError> {
             for project in projects {
                 println!("{} | {}", project.id, project.name);
             }
+        }
+        Program::ExportPdf {
+            project_name,
+            output,
+            start_date,
+            end_date,
+        } => {
+            let mut project_ids: Option<Vec<u32>> = None;
+
+            if let Some(name) = project_name {
+                let projects = client.get_all_projects_of_user().await?;
+                for project in projects {
+                    if project.name == name {
+                        project_ids = Some(vec![project.id]);
+                        break;
+                    }
+                }
+                if project_ids.is_none() {
+                    panic!(
+                        "Project {} not found! You can list projects by `toggl list-projects`",
+                        name
+                    );
+                }
+            }
+
+            let param = SummaryReportExportParam {
+                start_date,
+                end_date,
+                project_ids,
+            };
+
+            let pdf_bytes = client.export_summary_report(param).await?;
+            fs::write(&output, pdf_bytes)?;
+            println!("PDF report exported to: {}", output);
+            println!("Success!");
         }
         Program::Init { token } => {
             fs::write(&path, token)?;
