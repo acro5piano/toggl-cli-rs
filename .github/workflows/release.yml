@@ -18,12 +18,14 @@ jobs:
       - uses: actions-rs/toolchain@v1
         with:
             toolchain: stable
-            target: x86_64-unknown-linux-gnu
+            target: x86_64-unknown-linux-musl
 
       - name: Build the app
-        run: cargo build --release --target x86_64-unknown-linux-gnu
+        run:
+          cargo build --release --target x86_64-unknown-linux-musl
+          cp target/x86_64-unknown-linux-musl/release/toggl-cli-rs toggl-cli-rs-${{ github.event.release.tag_name }}-x86_64-unknown-linux-musl
 
       - name: Release
         uses: softprops/action-gh-release@v1
         with:
-          files: target/x86_64-unknown-linux-gnu/release/toggl-cli-rs
+          files: toggl-cli-rs-${{ github.event.release.tag_name }}-x86_64-unknown-linux-musl
