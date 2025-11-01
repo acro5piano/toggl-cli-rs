@@ -8,7 +8,7 @@ CLI tool to control toggl via the api, written in Rust.
 curl -L https://github.com/acro5piano/toggl-cli-rs/releases/latest/download/toggl-cli-rs -o ~/.local/bin/toggl
 chmod +x ~/.local/bin/toggl
 
-# If you don't include the path yet
+# Ensure you include the path
 export PATH=$PATH:~/.local/bin/toggl
 ```
 
@@ -22,7 +22,7 @@ toggl init --token <toggle_api_token>
 
 ```bash
 $ toggl
-toggl-cli-rs 0.0.3
+toggl-cli-rs 0.1.3
 Toggl cli for geek
 
 USAGE:
@@ -33,6 +33,7 @@ FLAGS:
     -V, --version    Prints version information
 
 SUBCOMMANDS:
+    export-pdf
     help             Prints this message or the help of the given subcommand(s)
     init
     list-projects
@@ -61,4 +62,24 @@ Or in short,
 
 ```
 toggl start-timer -n my-project -d 'Daily Standup'
+```
+
+### Export PDF
+
+Export time entries as a PDF report:
+
+```
+toggl export-pdf --start-date 2025-01-01 --end-date 2025-01-31 --output report.pdf
+```
+
+Or in short,
+
+```
+toggl export-pdf -s 2025-01-01 -e 2025-01-31 -o report.pdf
+```
+
+Filter by project name:
+
+```
+toggl export-pdf -s 2025-01-01 -e 2025-01-31 -n my-project -o report.pdf
 ```
