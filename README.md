@@ -22,7 +22,7 @@ toggl init --token <toggle_api_token>
 
 ```bash
 $ toggl
-toggl-cli-rs 0.1.3
+toggl-cli-rs 0.1.4
 Toggl cli for geek
 
 USAGE:
