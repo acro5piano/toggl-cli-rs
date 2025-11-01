@@ -1,4 +1,4 @@
-use crate::toggl_types::{SummaryReportExportParam, TimeEntryCreateParam};
+use crate::toggl_types::{DetailedReportSearchParam, TimeEntryCreateParam};
 use std::env;
 use std::fs;
 use std::path::Path;
@@ -148,13 +148,13 @@ async fn main() -> Result<(), util::AnyError> {
                 }
             }
 
-            let param = SummaryReportExportParam {
+            let param = DetailedReportSearchParam {
                 start_date,
                 end_date,
                 project_ids,
             };
 
-            let pdf_bytes = client.export_summary_report(param).await?;
+            let pdf_bytes = client.export_detailed_report(param).await?;
             fs::write(&output, pdf_bytes)?;
             println!("PDF report exported to: {}", output);
             println!("Success!");

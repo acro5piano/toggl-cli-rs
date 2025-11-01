@@ -1,6 +1,6 @@
 // See https://github.com/toggl/toggl_api_docs/blob/master/toggl_api.md
 
-use crate::toggl_types::{Data, Project, SummaryReportExportParam, TimeEntry, TimeEntryCreateParam, Workspace};
+use crate::toggl_types::{Data, DetailedReportSearchParam, Project, TimeEntry, TimeEntryCreateParam, Workspace};
 use crate::util::AnyError;
 use serde::de;
 use serde::Serialize;
@@ -143,12 +143,12 @@ impl TogglClient<'_> {
         Ok(self.put(&path, json!({ "stop": now })).await?)
     }
 
-    pub async fn export_summary_report(
+    pub async fn export_detailed_report(
         &self,
-        param: SummaryReportExportParam,
+        param: DetailedReportSearchParam,
     ) -> Result<bytes::Bytes, AnyError> {
         let workspace_id = self.get_workspaces().await?.first().unwrap().id;
-        let path = format!("{}/workspace/{}/summary/time_entries.pdf", TOGGL_REPORTS_ENDPOINT, workspace_id);
+        let path = format!("{}/workspace/{}/search/time_entries.pdf", TOGGL_REPORTS_ENDPOINT, workspace_id);
 
         let response = reqwest::Client::new()
             .post(&path)

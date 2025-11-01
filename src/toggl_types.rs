@@ -77,11 +77,22 @@ pub struct Workspace {
 }
 
 #[derive(Debug, Serialize, Deserialize)]
-pub struct SummaryReportExportParam {
+pub struct DetailedReportSearchParam {
     #[serde(skip_serializing_if = "Option::is_none")]
     pub start_date: Option<String>,
     #[serde(skip_serializing_if = "Option::is_none")]
     pub end_date: Option<String>,
     #[serde(skip_serializing_if = "Option::is_none")]
     pub project_ids: Option<Vec<u32>>,
+}
+
+#[derive(Debug, Serialize, Deserialize)]
+pub struct DetailedReportEntry {
+    pub id: u64,
+    pub user_id: u32,
+    pub project_id: Option<u32>,
+    pub description: Option<String>,
+    pub start: String,
+    pub end: String,
+    pub duration: i64,
 }
