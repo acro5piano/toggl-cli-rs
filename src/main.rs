@@ -13,7 +13,7 @@ mod util;
 enum Program {
     StartTimer {
         #[structopt(short, long)]
-        pid: Option<u32>,
+        pid: Option<u64>,
         #[structopt(short = "n", long)]
         project_name: Option<String>,
         #[structopt(short, long)]
@@ -59,7 +59,7 @@ async fn main() -> Result<(), util::AnyError> {
             project_name,
             description,
         } => {
-            let mut real_pid: Option<u32> = pid;
+            let mut real_pid: Option<u64> = pid;
             if pid.is_none() {
                 if let Some(n) = project_name {
                     let projects = client.get_all_projects_of_user().await.unwrap();
@@ -130,7 +130,7 @@ async fn main() -> Result<(), util::AnyError> {
             start_date,
             end_date,
         } => {
-            let mut project_ids: Option<Vec<u32>> = None;
+            let mut project_ids: Option<Vec<u64>> = None;
 
             if let Some(name) = project_name {
                 let projects = client.get_all_projects_of_user().await?;

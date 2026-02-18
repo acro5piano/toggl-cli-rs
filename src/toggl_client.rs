@@ -103,7 +103,7 @@ impl TogglClient<'_> {
         Ok(projects)
     }
 
-    pub async fn get_projects(&self, workspace_id: u32) -> Result<Vec<Project>, AnyError> {
+    pub async fn get_projects(&self, workspace_id: u64) -> Result<Vec<Project>, AnyError> {
         let path = format!("/workspaces/{}/projects", workspace_id);
         Ok(self.get::<Vec<Project>>(&path).await?)
     }
@@ -132,7 +132,7 @@ impl TogglClient<'_> {
 
     pub async fn stop_time_entry(
         &self,
-        time_entry_id: u32,
+        time_entry_id: u64,
     ) -> Result<Option<TimeEntry>, Box<dyn std::error::Error>> {
         let workspace_id = self.get_workspaces().await?.first().unwrap().id;
         let path = format!(
