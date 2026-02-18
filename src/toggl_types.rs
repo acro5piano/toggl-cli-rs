@@ -7,9 +7,9 @@ pub struct Data<T> {
 
 #[derive(Debug, Serialize, Deserialize)]
 pub struct TimeEntry {
-    pub id: u32,
-    pub wid: u32,
-    pub pid: Option<u32>,
+    pub id: u64,
+    pub wid: u64,
+    pub pid: Option<u64>,
     pub billable: bool,
     pub start: String,
     pub stop: Option<String>,
@@ -17,7 +17,7 @@ pub struct TimeEntry {
     pub description: String,
     pub duronly: bool,
     pub at: String,
-    pub uid: u32,
+    pub uid: u64,
 }
 
 impl TimeEntry {
@@ -36,7 +36,7 @@ pub struct TimeEntryCreateParamWrapped {
 
 #[derive(Debug, Serialize, Deserialize)]
 pub struct TimeEntryCreateParam {
-    pub pid: Option<u32>,
+    pub pid: Option<u64>,
     pub description: String,
     pub created_with: String,
 }
@@ -48,9 +48,9 @@ pub struct TimeEntryStopParam {
 
 #[derive(Debug, Serialize, Deserialize)]
 pub struct Project {
-    pub id: u32,
-    pub wid: u32,
-    pub cid: Option<u32>,
+    pub id: u64,
+    pub wid: u64,
+    pub cid: Option<u64>,
     pub name: String,
     pub at: String,
     pub created_at: String,
@@ -58,9 +58,9 @@ pub struct Project {
 
 #[derive(Debug, Serialize, Deserialize)]
 pub struct Workspace {
-    pub id: u32,
+    pub id: u64,
     pub name: String,
-    pub profile: Option<u32>,
+    pub profile: Option<u64>,
     pub premium: bool,
     pub admin: bool,
     pub default_hourly_rate: Option<i64>,
@@ -83,14 +83,14 @@ pub struct DetailedReportSearchParam {
     #[serde(skip_serializing_if = "Option::is_none")]
     pub end_date: Option<String>,
     #[serde(skip_serializing_if = "Option::is_none")]
-    pub project_ids: Option<Vec<u32>>,
+    pub project_ids: Option<Vec<u64>>,
 }
 
 #[derive(Debug, Serialize, Deserialize)]
 pub struct DetailedReportEntry {
     pub id: u64,
-    pub user_id: u32,
-    pub project_id: Option<u32>,
+    pub user_id: u64,
+    pub project_id: Option<u64>,
     pub description: Option<String>,
     pub start: String,
     pub end: String,
